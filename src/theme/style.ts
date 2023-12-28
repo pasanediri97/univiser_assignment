@@ -9,18 +9,21 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.primary,
   },
-  pt16:{
-    paddingTop:16
+  alignEnd: {
+    alignSelf: 'flex-end',
   },
-  mt10:{
-    marginTop:10
+  pt16: {
+    paddingTop: 16,
   },
-  mr10:{
-    marginRight:10
+  mt10: {
+    marginTop: 10,
   },
-  mr16:{
-    marginRight:16
-  }
+  mr10: {
+    marginRight: 10,
+  },
+  mr16: {
+    marginRight: 16,
+  },
 });
 
 export {COLORS};

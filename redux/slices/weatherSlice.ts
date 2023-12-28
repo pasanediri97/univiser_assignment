@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {fetchWeatherData} from '../thunks/weatherThunk';
-import { RootState } from '../store';
+import {RootState} from '../store';
 import WeatherData from '../models/weather_data';
 
 interface WeatherState {
-  data: WeatherData | null; 
+  data: WeatherData | null;
   loading: boolean;
   error: string | null;
 }
@@ -33,8 +33,7 @@ const weatherSlice = createSlice({
         },
       )
       .addCase(fetchWeatherData.rejected, (state, action) => {
-        state.loading = false;
-        console.log(action)
+        state.loading = false; 
         state.error = action.error.message ?? 'An error occurred';
       });
   },

@@ -20,7 +20,7 @@ import {
   selectWeatherError,
   selectWeatherLoading,
 } from '../../../redux';
-import Geolocation from '@react-native-community/geolocation'; 
+import Geolocation from '@react-native-community/geolocation';
 import {globalStyles} from '@/theme/style';
 import {styles} from './styles';
 import moment from 'moment';
@@ -41,7 +41,7 @@ const HomeView: React.FC<HomeViewProps> = () => {
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, 'HomeView'>>();
 
-  const dispatch = useDispatch<AppDispatch>(); 
+  const dispatch = useDispatch<AppDispatch>();
   const weatherData = useSelector(selectWeatherData);
   const loading = useSelector(selectWeatherLoading);
   const apiError = useSelector(selectWeatherError);
@@ -50,38 +50,21 @@ const HomeView: React.FC<HomeViewProps> = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    navigation.setOptions({
-      title: '',
-
-      headerRight: () => (
-        <View style={globalStyles.mr10}>
-          <TouchableOpacity onPress={handleRefresh}>
-            <Image style={styles.refreshIcon} source={images.ic_refresh} />
-          </TouchableOpacity>
-        </View>
-      ),
-    });
-  }, [navigation]);
-
-  useEffect(() => {
     requestLocationPermission();
   }, [dispatch]);
 
-  useEffect(() => {
-    console.log(process.env.BASE_URL);
-  }, [apiError]);
+  useEffect(() => {}, [apiError]);
 
-  useEffect(() => { 
+  useEffect(() => {
     const intervalId = setInterval(() => {
       const formattedDateTime = moment().format('MMMM Do YYYY, h:mm:ss a');
       setCurrentDateTime(formattedDateTime);
     }, 1000);
- 
+
     return () => clearInterval(intervalId);
   }, []);
 
   const handleRefresh = () => {
-    console.log('refresh called');
     requestLocationPermission();
   };
 
@@ -113,14 +96,11 @@ const HomeView: React.FC<HomeViewProps> = () => {
       position => {
         const currentLongitude = position.coords.longitude;
         const currentLatitude = position.coords.latitude;
-        console.log('got permission', currentLongitude, currentLatitude);
         dispatch(
           fetchWeatherData({lat: currentLatitude, lon: currentLongitude}),
         );
       },
-      error => {
-        console.log(error.message);
-      },
+      error => {},
       {
         enableHighAccuracy: false,
       },
@@ -129,6 +109,11 @@ const HomeView: React.FC<HomeViewProps> = () => {
 
   return (
     <SafeAreaView style={globalStyles.containerPrimary}>
+      <View style={[globalStyles.mr10,globalStyles.mt10,globalStyles.alignEnd]}>
+        <TouchableOpacity onPress={handleRefresh} testID="refresh-button">
+          <Image style={styles.refreshIcon} source={images.ic_refresh} />
+        </TouchableOpacity>
+      </View>
       <ScrollView
         contentContainerStyle={styles.scrollView}
         refreshControl={
@@ -136,7 +121,9 @@ const HomeView: React.FC<HomeViewProps> = () => {
         }>
         {weatherData != null && (
           <View style={styles.mainContainer}>
-            <Text style={[styles.text1,globalStyles.pt16]}>{weatherData.timezone}</Text>
+            <Text style={[styles.text1, globalStyles.pt16]} testID="timezone">
+              {weatherData.timezone}
+            </Text>
             <Text style={[styles.text2, globalStyles.pt16]}>
               {currentDateTime}
             </Text>
@@ -149,10 +136,10 @@ const HomeView: React.FC<HomeViewProps> = () => {
                   uri: `${process.env.WEATHER_IMAGE_BASE_URL}${weatherData.current.weather[0].icon}@2x.png`,
                 }}
               />
-              <Text style={[styles.text4]}>
+              <Text style={[styles.text4]} testID="weather-main">
                 {weatherData.current.weather[0].main}
               </Text>
-              <Text style={[styles.text5]}>
+              <Text style={[styles.text5]} testID="weather-description">
                 {weatherData.current.weather[0].description}
               </Text>
             </View>
@@ -227,4 +214,4 @@ const HomeView: React.FC<HomeViewProps> = () => {
   );
 };
 
-export default HomeView;
+export {HomeView};
